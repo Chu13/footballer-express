@@ -21,7 +21,23 @@ router.get("/matches",(req, res, next) => {
   });
 });// GET /matches
 
+router.get("/matches/admin",(req, res, next) => {
+  Match
+  .find({ owner: req.user._id})
+  .limit(20)
+  .exec()
+  .then((matchResults) =>{
+    // Respond with the query results in the JSON format
+    res.status(200).json(matchResults);
+  })
+  .catch((err) => {
+    console.log("GET /matches ERROR");
+    console.log(err);
 
+    // respond with an ERROR MESSAGE in the JSON format
+    res.status().json({ error: "Match list database error" });
+  });
+});
 
 router.post("/matches", (req, res, next) => {
   const theMatch = new Match({
