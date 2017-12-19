@@ -17,15 +17,21 @@ const matchSchema = new Schema(
       required: [true, 'Please tell the length']
     },
     time: {
-      type: Number,
+      type: String,
       required: [true, 'Please tell the length']
     },
     field:{
       type: String,
       required: [true, 'Please tell the field number']
     },
+    place: {
+      type: String
+    },
     owner:{
         type: Schema.Types.ObjectId
+    },
+    location: {
+      type: String
     },
     players: [
       { type: String }

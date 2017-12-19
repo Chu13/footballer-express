@@ -25,12 +25,14 @@ router.get("/matches",(req, res, next) => {
 
 router.post("/matches", (req, res, next) => {
   const theMatch = new Match({
-    captain: req.body.captainName,
+    captain: req.body.captain,
     date: req.body.date,
     length: req.body.length,
     time: req.body.time,
     field: req.body.field,
-    owner: req.user
+    owner: req.user,
+    place: req.user.placeName,
+    location: req.user.location
   });
 
   console.log(theMatch);
@@ -98,16 +100,21 @@ router.get("/matches/:id", (req, res, next) => {
 
 
 
-router.put("/matches/:id", (req, res, next) => {
+router.put("/matches/:id/join", (req, res, next) => {
+  // if(req.user === undefined) {
+  //   res.status(400).json({ error: "Not logged in" });
+  //   return;
+  // }
   Match.findById(req.params.id)
   .then((matchFromDb) => {
     matchFromDb.players.push(req.user.username);
-    return  matchFromDb.save();
+    matchFromDb.save()
+    .then((matchFromDb) => {
+      // respond with the QUERY RESULTS in the JSON format
+      res.status(200).json(matchFromDb);
+    });
   })
-  .then((matchFromDb) => {
-    // respond with the QUERY RESULTS in the JSON format
-    res.status(200).json(matchromDb);
-  })
+
   .catch((err) => {
     console.log("PUT /match/:id ERROR!");
     console.log(err);
